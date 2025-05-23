@@ -1,0 +1,12 @@
+export CAPUCHINATOR_DEV_MODE=true
+
+# Только имена файлов в одном каталоге с исполняемым файлом capuchinator
+export CAPUCHINATOR_FILENAME_COMPOSE_BLUE="compose.blue.yaml"
+export CAPUCHINATOR_FILENAME_COMPOSE_GREEN="compose.green.yaml"
+export CAPUCHINATOR_FILENAME_NGINX_CONF="nginx_capuchin.conf"
+export CAPUCHINATOR_FILENAME_VICTORIAMETRICS="victoriametrics.yaml"
+export CAPUCHINATOR_FILENAME_VECTOR="vector.yaml"
+
+export CAPUCHINATOR_GITHUB_PERSONAL_ACCESS_TOKEN="ghp_key"
+
+export DOCKER_API_VERSION="1.43"
