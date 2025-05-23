@@ -1,3 +1,5 @@
+[![audit](https://github.com/capuchinapp/capuchinator/actions/workflows/audit.yml/badge.svg?branch=master)](https://github.com/capuchinapp/capuchinator/actions/workflows/audit.yml)
+
 # Capuchinator
 
 ## Установка
