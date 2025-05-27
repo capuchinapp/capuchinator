@@ -5,9 +5,11 @@
 ## Установка
 
 ```bash
-curl -o /opt/capuchin/capuchinator_linux_amd64.tar.gz https://github.com/capuchinapp/capuchinator/releases/download/v0.1.0/capuchinator_0.1.0_linux_amd64.tar.gz?token=TOKEN
-tar -xzf *.tar.gz
+cd /opt/capuchin
+curl -L -o capuchinator.tar.gz https://github.com/capuchinapp/capuchinator/releases/download/v0.1.0/capuchinator_0.1.0_linux_amd64.tar.gz
+tar -xzf capuchinator.tar.gz capuchinator
 chmod +x ./capuchinator
+rm capuchinator.tar.gz
 ```
 
 ## Использование
@@ -18,7 +20,7 @@ chmod +x ./capuchinator
 ln -sf /etc/nginx/sites-available/capuchin.ru /opt/capuchin/nginx_capuchin.conf
 ```
 
-2. Настройка переменных окружения
+2. Настройка переменных окружения (используется инструмент [direnv](https://github.com/direnv/direnv))
 
 ```bash
 echo 'export CAPUCHINATOR_GITHUB_PERSONAL_ACCESS_TOKEN="ghp_key"
