@@ -41,3 +41,8 @@ jobs:
       - name: Run test
         run: go test -race -failfast -count 1 ./...
         working-directory: ./
+
+      - name: Run SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
