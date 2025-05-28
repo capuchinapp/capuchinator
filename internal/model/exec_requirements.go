@@ -66,8 +66,12 @@ func NewExecRequirements(dic DIC) *Exec {
 			}
 		},
 
-		SuccessFunc: func() {},
-		ErrorFunc:   func() {},
+		SuccessFunc: func() {
+			// Нечего делать
+		},
+		ErrorFunc: func() {
+			// Нечего делать
+		},
 
 		NextCmd: NewCurrentDeploy(dic),
 	})

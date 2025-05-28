@@ -7,6 +7,22 @@ import (
 	"capuchinator/internal/provider/github"
 )
 
+type DICConfig struct {
+	DevMode bool
+
+	SummaryWidth int
+
+	PhysicalWidth  int
+	PhysicalHeight int
+
+	Theme *domain.Theme
+
+	Summary *model.Summary
+
+	DockerService *docker.Docker
+	GitHubService *github.GitHub
+}
+
 type DIC struct {
 	devMode bool
 
@@ -19,34 +35,25 @@ type DIC struct {
 
 	summary *model.Summary
 
-	docker *docker.Docker
-	gitHub *github.GitHub
+	dockerService *docker.Docker
+	gitHubService *github.GitHub
 }
 
-func NewDIC(
-	devMode bool,
-	summaryWidth int,
-	physicalWidth int,
-	physicalHeight int,
-	theme *domain.Theme,
-	summary *model.Summary,
-	dockerService *docker.Docker,
-	gitHub *github.GitHub,
-) *DIC {
+func NewDIC(cfg DICConfig) *DIC {
 	return &DIC{
-		devMode: devMode,
+		devMode: cfg.DevMode,
 
-		summaryWidth: summaryWidth,
+		summaryWidth: cfg.SummaryWidth,
 
-		physicalWidth:  physicalWidth,
-		physicalHeight: physicalHeight,
+		physicalWidth:  cfg.PhysicalWidth,
+		physicalHeight: cfg.PhysicalHeight,
 
-		theme: theme,
+		theme: cfg.Theme,
 
-		summary: summary,
+		summary: cfg.Summary,
 
-		docker: dockerService,
-		gitHub: gitHub,
+		dockerService: cfg.DockerService,
+		gitHubService: cfg.GitHubService,
 	}
 }
 
@@ -74,10 +81,10 @@ func (d *DIC) GetSummary() *model.Summary {
 	return d.summary
 }
 
-func (d *DIC) GetDocker() *docker.Docker {
-	return d.docker
+func (d *DIC) GetDockerService() *docker.Docker {
+	return d.dockerService
 }
 
-func (d *DIC) GetGitHub() *github.GitHub {
-	return d.gitHub
+func (d *DIC) GetGitHubService() *github.GitHub {
+	return d.gitHubService
 }

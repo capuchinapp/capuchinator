@@ -54,27 +54,35 @@ func New() (*App, error) {
 
 	theme := domain.NewTheme()
 
-	summary := model.NewSummary(
-		conf.DevMode,
-		summaryWidth,
-		theme,
-		conf.Filename.ComposeBlue,
-		conf.Filename.ComposeGreen,
-		conf.Filename.NginxConf,
-		conf.Filename.VictoriaMetrics,
-		conf.Filename.Vector,
-	)
+	summary := model.NewSummary(model.SummaryConfig{
+		DevMode: conf.DevMode,
 
-	dic := NewDIC(
-		conf.DevMode,
-		summaryWidth,
-		physicalWidth,
-		physicalHeight,
-		theme,
-		summary,
-		dockerService,
-		github.New(conf.GitHub.PersonalAccessToken, conf.GitHub.APIVersion, conf.GitHub.PackagesURL),
-	)
+		Width: summaryWidth,
+
+		Theme: theme,
+
+		FilenameComposeBlue:     conf.Filename.ComposeBlue,
+		FilenameComposeGreen:    conf.Filename.ComposeGreen,
+		FilenameNginxConf:       conf.Filename.NginxConf,
+		FilenameVictoriaMetrics: conf.Filename.VictoriaMetrics,
+		FilenameVector:          conf.Filename.Vector,
+	})
+
+	dic := NewDIC(DICConfig{
+		DevMode: conf.DevMode,
+
+		SummaryWidth: summaryWidth,
+
+		PhysicalWidth:  physicalWidth,
+		PhysicalHeight: physicalHeight,
+
+		Theme: theme,
+
+		Summary: summary,
+
+		DockerService: dockerService,
+		GitHubService: github.New(conf.GitHub.PersonalAccessToken, conf.GitHub.APIVersion, conf.GitHub.PackagesURL),
+	})
 
 	return &App{
 		summary: summary,

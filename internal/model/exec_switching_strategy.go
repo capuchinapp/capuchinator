@@ -199,11 +199,13 @@ func switchNginx(
 
 	fileContent := string(content)
 
-	currAPIString := "proxy_pass http://127.0.0.1:" + currPortAPI
-	nextAPIString := "proxy_pass http://127.0.0.1:" + nextPortAPI
+	const proxyPass = "proxy_pass http://127.0.0.1:" //#nosec G101 -- This is a false positive
 
-	currUIString := "proxy_pass http://127.0.0.1:" + currPortUI
-	nextUIString := "proxy_pass http://127.0.0.1:" + nextPortUI
+	currAPIString := proxyPass + currPortAPI
+	nextAPIString := proxyPass + nextPortAPI
+
+	currUIString := proxyPass + currPortUI
+	nextUIString := proxyPass + nextPortUI
 
 	if !strings.Contains(fileContent, "#"+currAPIString) {
 		fileContent = strings.Replace(fileContent, currAPIString, "#"+currAPIString, 1)

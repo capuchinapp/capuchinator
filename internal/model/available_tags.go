@@ -59,7 +59,7 @@ func (c *AvailableTags) View() string {
 }
 
 func (c *AvailableTags) getAvailableTags() tea.Msg {
-	tags, err := c.dic.GetGitHub().GetAvailableTags()
+	tags, err := c.dic.GetGitHubService().GetAvailableTags()
 	if err != nil {
 		return StatusError{
 			fmt.Errorf("failed to get available tags: %v", err),

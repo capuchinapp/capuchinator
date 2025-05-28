@@ -9,6 +9,20 @@ import (
 	"capuchinator/internal/domain"
 )
 
+type SummaryConfig struct {
+	DevMode bool
+
+	Width int
+
+	Theme *domain.Theme
+
+	FilenameComposeBlue     string
+	FilenameComposeGreen    string
+	FilenameNginxConf       string
+	FilenameVictoriaMetrics string
+	FilenameVector          string
+}
+
 type Summary struct {
 	devMode bool
 	theme   *domain.Theme
@@ -58,23 +72,14 @@ type styles struct {
 	text     lipgloss.Style
 }
 
-func NewSummary(
-	devMode bool,
-	width int,
-	theme *domain.Theme,
-	filenameComposeBlue string,
-	filenameComposeGreen string,
-	filenameNginxConf string,
-	filenameVictoriaMetrics string,
-	filenameVector string,
-) *Summary {
+func NewSummary(cfg SummaryConfig) *Summary {
 	marginCompensation := 3
 
 	return &Summary{
-		devMode: devMode,
-		theme:   theme,
+		devMode: cfg.DevMode,
+		theme:   cfg.Theme,
 
-		dirMaxWidth: width - marginCompensation,
+		dirMaxWidth: cfg.Width - marginCompensation,
 
 		mode: "???",
 
@@ -83,11 +88,11 @@ func NewSummary(
 		requirementsDockerComposeVersion: "???",
 		requirementsNginxVersion:         "???",
 
-		filenameComposeBlue:     filenameComposeBlue,
-		filenameComposeGreen:    filenameComposeGreen,
-		filenameNginxConf:       filenameNginxConf,
-		filenameVictoriaMetrics: filenameVictoriaMetrics,
-		filenameVector:          filenameVector,
+		filenameComposeBlue:     cfg.FilenameComposeBlue,
+		filenameComposeGreen:    cfg.FilenameComposeGreen,
+		filenameNginxConf:       cfg.FilenameNginxConf,
+		filenameVictoriaMetrics: cfg.FilenameVictoriaMetrics,
+		filenameVector:          cfg.FilenameVector,
 
 		currentDir:      "???",
 		currentVersion:  "???",
@@ -102,17 +107,17 @@ func NewSummary(
 
 		styles: styles{
 			category: lipgloss.NewStyle().
-				Foreground(theme.ColorWhite).
+				Foreground(cfg.Theme.ColorWhite).
 				Bold(true).
 				Transform(strings.ToUpper).
 				MarginTop(1),
 
 			title: lipgloss.NewStyle().
-				Foreground(theme.ColorGreen).
+				Foreground(cfg.Theme.ColorGreen).
 				Bold(true),
 
 			text: lipgloss.NewStyle().
-				Foreground(theme.ColorYellow).
+				Foreground(cfg.Theme.ColorYellow).
 				Bold(true),
 		},
 	}

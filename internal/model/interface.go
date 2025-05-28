@@ -18,6 +18,6 @@ type DIC interface {
 
 	GetSummary() *Summary
 
-	GetDocker() *docker.Docker
-	GetGitHub() *github.GitHub
+	GetDockerService() *docker.Docker
+	GetGitHubService() *github.GitHub
 }

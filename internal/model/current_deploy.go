@@ -72,7 +72,7 @@ func (c *CurrentDeploy) View() string {
 
 func (c *CurrentDeploy) getCurrentDeploy() tea.Msg {
 	if c.summary.GetMode() == domain.ModeUpdate {
-		v, strategy, err := c.dic.GetDocker().GetCurrentDeploy()
+		v, strategy, err := c.dic.GetDockerService().GetCurrentDeploy()
 		if err != nil {
 			return StatusError{
 				fmt.Errorf("failed to get current deploy: %v", err),
