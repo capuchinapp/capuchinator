@@ -12,7 +12,7 @@ func NewExecClearPGStat(dic DIC) *Exec {
 
 		StartFunc: func() domain.ExecResult {
 			command := exec.Command(
-				"docker",
+				PathDocker,
 				"exec",
 				"-it",
 				"capuchin_postgres",
@@ -26,7 +26,7 @@ func NewExecClearPGStat(dic DIC) *Exec {
 			)
 			if dic.GetDevMode() {
 				command = exec.Command(
-					"docker",
+					PathDocker,
 					"ps",
 				)
 			}

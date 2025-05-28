@@ -124,13 +124,13 @@ func (a *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		if key.Matches(msg, a.keys.Quit) { //nolint:nestif // ignore
 			if a.summary.GetDevMode() {
-				output, err := exec.Command("docker", "rm", "-f", "capuchinator_app").CombinedOutput()
+				output, err := exec.Command("/usr/bin/docker", "rm", "-f", "capuchinator_app").CombinedOutput()
 				if err != nil {
 					fmt.Println(err)
 				}
 				fmt.Println(string(output))
 
-				output, err = exec.Command("docker", "rmi", "-f", "nginx:alpine").CombinedOutput()
+				output, err = exec.Command("/usr/bin/docker", "rmi", "-f", "nginx:alpine").CombinedOutput()
 				if err != nil {
 					fmt.Println(err)
 				}

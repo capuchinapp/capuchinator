@@ -4,6 +4,10 @@ import tea "github.com/charmbracelet/bubbletea"
 
 const (
 	TestContainerName = "capuchinator_app"
+
+	PathDocker = "/usr/bin/docker"
+	PathCurl   = "/usr/bin/curl"
+	PathNginx  = "/usr/sbin/nginx"
 )
 
 type NextCmdMsg struct {

@@ -21,14 +21,14 @@ func NewExecStoppingCurrentDeploy(dic DIC) *Exec {
 			containerUI := fmt.Sprintf(`capuchin_%s_%s_ui`, currentStrategy, currentVersion)
 
 			command := exec.Command(
-				"docker",
+				PathDocker,
 				"stop",
 				containerAPI,
 				containerUI,
 			)
 			if dic.GetDevMode() {
 				command = exec.Command(
-					"docker",
+					PathDocker,
 					"ps",
 				)
 			}

@@ -51,11 +51,11 @@ func NewExecSwitchingStrategy(dic DIC) *Exec {
 				return resVector
 			}
 
-			cmdTest := exec.Command("nginx", "-t")
-			cmdReload := exec.Command("nginx", "-s", "reload")
+			cmdTest := exec.Command(PathNginx, "-t")
+			cmdReload := exec.Command(PathNginx, "-s", "reload")
 			if devMode {
-				cmdTest = exec.Command("docker", "exec", TestContainerName, "nginx", "-t")
-				cmdReload = exec.Command("docker", "exec", TestContainerName, "nginx", "-s", "reload")
+				cmdTest = exec.Command(PathDocker, "exec", TestContainerName, PathNginx, "-t")
+				cmdReload = exec.Command(PathDocker, "exec", TestContainerName, PathNginx, "-s", "reload")
 			}
 			resNginx := switchNginx(pathNginx, currPortAPI, currPortUI, nextPortAPI, nextPortUI, cmdTest, cmdReload)
 			if resNginx.Status == domain.ExecResultStatusError {
@@ -129,7 +129,7 @@ func switchVictoriaMetrics(filePath string, nextStrategy domain.Strategy, contai
 		}
 	}
 
-	output, err := exec.Command("docker", "restart", container).CombinedOutput()
+	output, err := exec.Command(PathDocker, "restart", container).CombinedOutput()
 	if err != nil {
 		return domain.ExecResult{
 			Status: domain.ExecResultStatusError,
@@ -165,7 +165,7 @@ func switchVector(filePath string, nextStrategy domain.Strategy, nextVersion str
 		}
 	}
 
-	output, err := exec.Command("docker", "restart", container).CombinedOutput()
+	output, err := exec.Command(PathDocker, "restart", container).CombinedOutput()
 	if err != nil {
 		return domain.ExecResult{
 			Status: domain.ExecResultStatusError,

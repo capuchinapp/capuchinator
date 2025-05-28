@@ -16,7 +16,7 @@ func NewExecLaunchingDeploy(dic DIC) *Exec {
 
 		StartFunc: func() domain.ExecResult {
 			command := exec.Command( //#nosec G204 -- This is a false positive
-				"docker",
+				PathDocker,
 				"compose",
 				"-f",
 				fmt.Sprintf("./capuchin-compose.%s.yaml", summary.GetNextStrategy()),
@@ -27,7 +27,7 @@ func NewExecLaunchingDeploy(dic DIC) *Exec {
 
 			if dic.GetDevMode() {
 				command = exec.Command(
-					"docker",
+					PathDocker,
 					"run",
 					"-d",
 					"--name",

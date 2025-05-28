@@ -30,25 +30,25 @@ func NewExecRequirements(dic DIC) *Exec {
 				nginxRegex         = regexp.MustCompile(`nginx/(?P<version>[\d\.]+)`)
 			)
 
-			curlVersion, err = getVersion(exec.Command("curl", "--version"), curlRegex)
+			curlVersion, err = getVersion(exec.Command(PathCurl, "--version"), curlRegex)
 			if err != nil {
 				return *err
 			}
 			summary.UpdateRequirementsCurlVersion(curlVersion)
 
-			dockerVersion, err = getVersion(exec.Command("docker", "-v"), dockerRegex)
+			dockerVersion, err = getVersion(exec.Command(PathDocker, "-v"), dockerRegex)
 			if err != nil {
 				return *err
 			}
 			summary.UpdateRequirementsDockerVersion(dockerVersion)
 
-			dockerComposeVersion, err = getVersion(exec.Command("docker", "compose", "version"), dockerComposeRegex)
+			dockerComposeVersion, err = getVersion(exec.Command(PathDocker, "compose", "version"), dockerComposeRegex)
 			if err != nil {
 				return *err
 			}
 			summary.UpdateRequirementsDockerComposeVersion(dockerComposeVersion)
 
-			nginxVersion, err = getVersion(exec.Command("nginx", "-v"), nginxRegex)
+			nginxVersion, err = getVersion(exec.Command(PathNginx, "-v"), nginxRegex)
 			if err != nil {
 				return *err
 			}

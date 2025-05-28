@@ -65,7 +65,7 @@ func NewExecCheckingRequests(dic DIC) *Exec {
 }
 
 func checkRequest(port string) domain.ExecResult {
-	cmd := exec.Command("curl", "-I", "http://localhost:"+port) //#nosec G204 -- This is a false positive
+	cmd := exec.Command(PathCurl, "-I", "http://localhost:"+port) //#nosec G204 -- This is a false positive
 
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr

@@ -22,7 +22,7 @@ func NewComplete(theme *domain.Theme) *Complete {
 }
 
 func (c *Complete) Init() tea.Cmd {
-	out, err := exec.Command("docker", "ps").CombinedOutput()
+	out, err := exec.Command(PathDocker, "ps").CombinedOutput()
 	if err != nil {
 		outString := string(out)
 

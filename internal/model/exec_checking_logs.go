@@ -59,7 +59,7 @@ func NewExecCheckingLogs(dic DIC) *Exec {
 }
 
 func getLogs(container string) domain.ExecResult {
-	output, err := exec.Command("docker", "logs", container).CombinedOutput()
+	output, err := exec.Command(PathDocker, "logs", container).CombinedOutput()
 	if err != nil {
 		return domain.ExecResult{
 			Status: domain.ExecResultStatusError,
