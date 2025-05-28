@@ -14,7 +14,6 @@ func NewExecClearPGStat(dic DIC) *Exec {
 			command := exec.Command(
 				PathDocker,
 				"exec",
-				"-it",
 				"capuchin_postgres",
 				"psql",
 				"-U",
@@ -22,7 +21,7 @@ func NewExecClearPGStat(dic DIC) *Exec {
 				"-d",
 				"postgres",
 				"-c",
-				`"SELECT pg_stat_statements_reset();"`,
+				"SELECT pg_stat_statements_reset();",
 			)
 			if dic.GetDevMode() {
 				command = exec.Command(
