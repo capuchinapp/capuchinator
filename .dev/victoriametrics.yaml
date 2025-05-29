@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'metrics'
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['capuchin_blue_api:8080'] # blue
+      #- targets: ['capuchin_green_api:8080'] # green
+  - job_name: 'nodeexporter'
+    static_configs:
+      - targets: ['capuchin_ops_nodeexporter:9100']

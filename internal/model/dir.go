@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
@@ -77,7 +76,7 @@ func (c *Dir) getDir() tea.Msg {
 	}
 
 	if c.dic.GetDevMode() {
-		c.dir = strings.TrimSuffix(dir, "/capuchinator")
+		c.dir = dir + "/.dev"
 	} else {
 		c.dir = dir
 	}
