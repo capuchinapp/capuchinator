@@ -6,10 +6,9 @@
 
 ```bash
 cd /opt/capuchin
-curl -L -o capuchinator.tar.gz https://github.com/capuchinapp/capuchinator/releases/download/v0.1.0/capuchinator_0.1.0_linux_amd64.tar.gz
-tar -xzf capuchinator.tar.gz capuchinator
-chmod +x ./capuchinator
-rm capuchinator.tar.gz
+curl -L https://raw.githubusercontent.com/capuchinapp/capuchinator/refs/heads/master/scripts/install.sh
+chmod +x install.sh
+./install.sh v0.1.0
 ```
 
 ## Использование
