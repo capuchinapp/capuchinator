@@ -7,10 +7,6 @@ services:
     labels:
       - "capuchin.app.component=postgres"
     restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
     volumes:
       - capuchin_db_data:/var/lib/postgresql/data
     networks:
@@ -24,26 +20,6 @@ services:
     labels:
       - "capuchin.app.component=api"
     restart: unless-stopped
-    environment:
-      POSTGRES_HOST: capuchin_db
-      POSTGRES_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-      GOOSE_DRIVER: postgres
-      GOOSE_DBSTRING: "host=capuchin_db port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
-      GOOSE_MIGRATION_DIR: ./migrations
-      HTTP_CORS_ALLOW_ORIGINS: "https://app.capuchin.ru"
-      COOKIE_DOMAIN: "app.capuchin.ru"
-      MAILER_HOST: "smtp.jino.ru"
-      MAILER_PORT: 465
-      MAILER_USERNAME: "no-reply@capuchin.ru"
-      MAILER_PASSWORD: "password"
-      MAILER_FROM: "Capuchin <no-reply@capuchin.ru>"
-      SUPPORT_MAIL_TO: "atomcms@ya.ru"
-      CAPTCHA_PROVIDER: "yandex"
-      CAPTCHA_YANDEX_SERVER_KEY: "server_key"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://capuchin_ops_jaeger:4318"
     ports:
       - "3011:3000"
     networks:
