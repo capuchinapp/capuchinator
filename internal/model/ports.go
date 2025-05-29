@@ -8,7 +8,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
-	"gopkg.in/yaml.v3"
+	"github.com/goccy/go-yaml"
 
 	"capuchinator/internal/domain"
 )
