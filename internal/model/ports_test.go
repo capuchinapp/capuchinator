@@ -3,9 +3,9 @@ package model
 import (
 	"testing"
 
-	"capuchinator/internal/domain"
-
 	"github.com/stretchr/testify/assert"
+
+	"capuchinator/internal/domain"
 )
 
 func Test_findPorts(t *testing.T) {
