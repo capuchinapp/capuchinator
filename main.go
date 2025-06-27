@@ -8,8 +8,10 @@ import (
 	"capuchinator/internal/application"
 )
 
+var appVersion = "v0.0.0" //nolint:gochecknoglobals // все в порядке
+
 func main() {
-	app, err := application.New()
+	app, err := application.New(appVersion)
 	if err != nil {
 		log.Fatalf("New: %v\n", err)
 	}

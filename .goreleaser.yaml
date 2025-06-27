@@ -13,12 +13,13 @@ builds:
       - -trimpath
     ldflags:
       - -s -w
+      - -X 'main.appVersion={{.Version}}'
     binary: capuchinator
     main: ./main.go
 
 archives:
   - formats: [tar.gz]
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}" # capuchinator_v1.0.0_linux_amd64.tar.gz
+    name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}_{{.Arch}}" # capuchinator_v1.0.0_linux_amd64.tar.gz
 
 changelog:
   use: git

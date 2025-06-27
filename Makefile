@@ -24,10 +24,6 @@ test:
 run:
 	@go run -race ./main.go
 
-.PHONY: build
-build:
-	@CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o capuchinator ./main.go
-
 .PHONY: tools
 tools: deps
 	@go install golang.org/x/vuln/cmd/govulncheck@latest

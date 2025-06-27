@@ -10,7 +10,8 @@ import (
 )
 
 type SummaryConfig struct {
-	DevMode bool
+	AppVersion string
+	DevMode    bool
 
 	Width int
 
@@ -24,8 +25,9 @@ type SummaryConfig struct {
 }
 
 type Summary struct {
-	devMode bool
-	theme   *domain.Theme
+	appVersion string
+	devMode    bool
+	theme      *domain.Theme
 
 	dirMaxWidth int
 
@@ -76,8 +78,9 @@ func NewSummary(cfg SummaryConfig) *Summary {
 	marginCompensation := 3
 
 	return &Summary{
-		devMode: cfg.DevMode,
-		theme:   cfg.Theme,
+		appVersion: cfg.AppVersion,
+		devMode:    cfg.DevMode,
+		theme:      cfg.Theme,
 
 		dirMaxWidth: cfg.Width - marginCompensation,
 
@@ -124,12 +127,17 @@ func NewSummary(cfg SummaryConfig) *Summary {
 }
 
 func (s *Summary) View() string {
-	header := lipgloss.NewStyle().
+	title := lipgloss.NewStyle().
 		Foreground(s.theme.ColorOrange).
 		Bold(true).
 		Transform(strings.ToUpper).
-		MarginBottom(1).
 		Render("🛠️ Capuchinator")
+	version := lipgloss.NewStyle().
+		Foreground(s.theme.ColorWhite).
+		Render(s.appVersion)
+	header := lipgloss.NewStyle().
+		MarginBottom(1).
+		Render(title + " " + version)
 
 	devModeStr := s.styles.text.Render("off")
 	if s.devMode {

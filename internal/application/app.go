@@ -36,7 +36,7 @@ type App struct {
 	keys       domain.KeyMap
 }
 
-func New() (*App, error) {
+func New(appVersion string) (*App, error) {
 	conf, err := LoadConfiguration()
 	if err != nil {
 		return nil, fmt.Errorf("load configuration: %v", err)
@@ -55,7 +55,8 @@ func New() (*App, error) {
 	theme := domain.NewTheme()
 
 	summary := model.NewSummary(model.SummaryConfig{
-		DevMode: conf.DevMode,
+		AppVersion: appVersion,
+		DevMode:    conf.DevMode,
 
 		Width: summaryWidth,
 
