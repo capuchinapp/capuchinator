@@ -29,7 +29,11 @@ func NewMode(dic DIC) *Mode {
 		huh.NewGroup(
 			huh.NewSelect[string]().
 				Title("Choose mode").
-				Options(huh.NewOptions(domain.ModeUpdate.String(), domain.ModeInstall.String())...).
+				Options(huh.NewOptions(
+					domain.ModeUpdate.String(),
+					domain.ModeInstall.String(),
+					domain.ModeClearPGStat.String(),
+				)...).
 				Value(&c.mode),
 		).WithShowHelp(false),
 	)
@@ -54,6 +58,12 @@ func (c *Mode) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		c.dic.GetSummary().UpdateMode(domain.Mode(c.mode))
 
 		cmds = append(cmds, func() tea.Msg {
+			if c.mode == domain.ModeClearPGStat.String() {
+				return NextCmdMsg{
+					NextCmd: NewExecClearPGStat(c.dic),
+				}
+			}
+
 			return NextCmdMsg{
 				NextCmd: NewExecRequirements(c.dic),
 			}
