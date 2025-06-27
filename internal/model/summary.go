@@ -137,7 +137,7 @@ func (s *Summary) View() string {
 		Render(s.appVersion)
 	header := lipgloss.NewStyle().
 		MarginBottom(1).
-		Render(title + " " + version)
+		Render(title + " v" + version)
 
 	devModeStr := s.styles.text.Render("off")
 	if s.devMode {
