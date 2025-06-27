@@ -6,7 +6,7 @@
 
 ```bash
 cd /opt/capuchin
-curl -L https://raw.githubusercontent.com/capuchinapp/capuchinator/refs/heads/master/scripts/install.sh
+curl -O https://raw.githubusercontent.com/capuchinapp/capuchinator/refs/heads/master/scripts/install.sh
 chmod +x install.sh
 ./install.sh v0.1.0
 ```
@@ -30,4 +30,11 @@ export DOCKER_API_VERSION="1.43"' > .envrc
 
 ```bash
 ./capuchinator
+```
+
+## Обновление
+
+```bash
+cd /opt/capuchin
+./install.sh v0.1.0
 ```
