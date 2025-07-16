@@ -25,9 +25,9 @@ jobs:
         run: go mod download
 
       - name: Run linter check
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
-          version: v1.64.5
+          version: v2.2.1
           working-directory: ./
 
       - name: Run vulnerability check

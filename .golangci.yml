@@ -1,49 +1,9 @@
+version: "2"
 run:
   concurrency: 4
-  timeout: 5m
-
+  go: 1.24.4
 linters:
-  disable-all:
-    true
-    # Disabled linters:
-    # canonicalheader
-    # decorder
-    # dupword
-    # err113
-    # exhaustruct
-    # forbidigo
-    # forcetypeassert # заменён на errcheck
-    # funlen
-    # ginkgolinter
-    # gofmt # заменён на goimports
-    # gofumpt # заменён на goimports
-    # goheader
-    # gomoddirectives
-    # gomodguard # используется более мощный depguard
-    # gosmopolitan
-    # grouper
-    # interfacebloat
-    # intrange
-    # ireturn
-    # lll
-    # loggercheck
-    # mirror
-    # misspell # бесполезный
-    # nonamedreturns
-    # nlreturn # слишком строгий и в основном код не более читабелен
-    # paralleltest # слишком много ложных срабатываний
-    # protogetter
-    # sloglint
-    # spancheck
-    # sqlclosecheck
-    # tagalign
-    # tenv # заменён на usetesting.os-setenv: true
-    # testableexamples
-    # testpackage
-    # varnamelen
-    # wastedassign
-    # wsl # слишком строгий и в основном код не более читабелен
-    # zerologlint
+  default: none
   enable:
     - asasalint
     - asciicheck
@@ -57,6 +17,7 @@ linters:
     - dogsled
     - dupl
     - durationcheck
+    - embeddedstructfieldcheck
     - errcheck
     - errchkjson
     - errname
@@ -64,7 +25,8 @@ linters:
     - exhaustive
     - exptostd
     - fatcontext
-    - gci
+    - forcetypeassert
+    - funcorder
     - gocheckcompilerdirectives
     - gochecknoglobals
     - gochecknoinits
@@ -75,10 +37,8 @@ linters:
     - gocyclo
     - godot
     - godox
-    - goimports
     - goprintffuncname
     - gosec
-    - gosimple
     - govet
     - iface
     - importas
@@ -86,7 +46,8 @@ linters:
     - ineffassign
     - maintidx
     - makezero
-    - mnd # https://golangci-lint.run/usage/linters/#mnd
+    - misspell
+    - mnd
     - musttag
     - nakedret
     - nestif
@@ -105,12 +66,10 @@ linters:
     - revive
     - rowserrcheck
     - staticcheck
-    - stylecheck
     - tagliatelle
     - testifylint
     - thelper
     - tparallel
-    - typecheck
     - unconvert
     - unparam
     - unused
@@ -118,108 +77,132 @@ linters:
     - usetesting
     - whitespace
     - wrapcheck
-
-linters-settings:
-  cyclop:
-    max-complexity: 15
-    skip-tests: true
-  depguard:
+  settings:
+    cyclop:
+      max-complexity: 15
+    depguard:
+      rules:
+        main:
+          list-mode: lax
+          deny:
+            - pkg: github.com/pkg/errors
+              desc: Should be replaced by standard lib errors package
+            - pkg: github.com/golang/protobuf
+              desc: Use google.golang.org/protobuf instead, see https://developers.google.com/protocol-buffers/docs/reference/go/faq#modules
+    errcheck:
+      check-type-assertions: true
+    errorlint:
+      errorf: false
+    exhaustive:
+      default-signifies-exhaustive: true
+      explicit-exhaustive-switch: true
+    gocognit:
+      min-complexity: 15
+    gocyclo:
+      min-complexity: 15
+    gosec:
+      excludes:
+        - G108
+    govet:
+      disable:
+        - fieldalignment
+        - slog
+      enable-all: true
+      settings:
+        shadow:
+          strict: true
+    iface:
+      enable:
+        - identical
+        - unused
+        - opaque
+    nestif:
+      min-complexity: 5
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+    revive:
+      enable-all-rules: true
+      rules:
+        - name: add-constant
+          disabled: true
+        - name: cognitive-complexity
+          disabled: true
+        - name: comment-spacings
+          disabled: true
+        - name: cyclomatic
+          disabled: true
+        - name: function-length
+          disabled: true
+        - name: line-length-limit
+          disabled: true
+        - name: max-public-structs
+          disabled: true
+        - name: unused-parameter
+          disabled: true
+    rowserrcheck:
+      packages:
+        - github.com/jmoiron/sqlx
+    tagliatelle:
+      case:
+        use-field-name: true
+    testifylint:
+      enable-all: true
+      disable:
+        - require-error
+    unparam:
+      check-exported: true
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     rules:
-      main:
-        list-mode: lax
-        deny:
-          - pkg: "github.com/pkg/errors"
-            desc: Should be replaced by standard lib errors package
-          - pkg: "github.com/golang/protobuf"
-            desc: "Use google.golang.org/protobuf instead, see https://developers.google.com/protocol-buffers/docs/reference/go/faq#modules"
-  errcheck:
-    check-type-assertions: true
-  errorlint:
-    errorf: false
-  exhaustive:
-    # Presence of "default" case in switch statements satisfies exhaustiveness,
-    # even if all enum members are not listed.
-    default-signifies-exhaustive: true
-    # Only run exhaustive check on switches with "//exhaustive:enforce" comment.
-    explicit-exhaustive-switch: true
-  gci:
-    sections:
-      - standard
-      - default
-      - prefix(capuchinator)
-  gocognit:
-    min-complexity: 15
-  gocyclo:
-    min-complexity: 15
-  goimports:
-    local-prefixes: capuchinator
-  gosec:
-    excludes:
-      - G108 # Profiling endpoint automatically exposed on /debug/pprof
-  govet:
-    # Run `GL_DEBUG=govet golangci-lint run --enable=govet` to see default, all available analyzers, and enabled analyzers.
-    enable-all: true
-    disable:
-      - fieldalignment # Использовать при необходимости, ухудшается читаемость кода
-      - slog # На проекте используется zap
-    settings:
-      shadow:
-        strict: true
-  iface:
-    enable:
-      - identical
-      - unused
-      - opaque
-  nestif:
-    min-complexity: 5
-  nolintlint:
-    require-explanation: true
-    require-specific: true
-  revive:
-    enable-all-rules: true
-    rules:
-      - name: add-constant
-        disabled: true
-      - name: cognitive-complexity
-        disabled: true
-      - name: comment-spacings
-        disabled: true
-      - name: cyclomatic
-        disabled: true
-      - name: function-length
-        disabled: true
-      - name: line-length-limit
-        disabled: true
-      - name: max-public-structs
-        disabled: true
-      - name: unused-parameter
-        disabled: true
-  rowserrcheck:
-    packages:
-      - github.com/jmoiron/sqlx
-  tagliatelle:
-    case:
-      use-field-name: true
-  testifylint:
-    enable-all: true
-    disable:
-      - require-error
-  unparam:
-    check-exported: true
-
+      - linters:
+          - dupl
+          - goconst
+          - maintidx
+          - maligned
+          - musttag
+          - revive
+        path: _test\.go
+      - path: internal/model/ports.go
+        text: ^yaml.+$
+      - linters:
+          - govet
+        text: '^shadow: declaration of "err" shadows declaration.+'
+      - linters:
+          - cyclop
+        path: (.+)_test\.go
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 issues:
-  # Maximum count of issues with the same text.
-  # Set to 0 to disable.
-  # Default: 3
   max-same-issues: 50
-
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - dupl
-        - maintidx
-    - path: internal/model/ports.go
-      text: "^yaml.+$"
-    - linters:
-        - govet
-      text: '^shadow: declaration of "err" shadows declaration.+'
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - goimports
+    - golines
+  settings:
+    gci:
+      sections:
+        - standard
+        - default
+        - prefix(capuchinator)
+    goimports:
+      local-prefixes:
+        - capuchinator
+    golines:
+      max-len: 160
+      reformat-tags: false
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

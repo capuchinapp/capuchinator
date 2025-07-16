@@ -2,6 +2,10 @@ package domain
 
 import "github.com/charmbracelet/bubbles/key"
 
+type KeyMap struct {
+	Quit key.Binding
+}
+
 func NewKeyMap() KeyMap {
 	return KeyMap{
 		Quit: key.NewBinding(
@@ -9,10 +13,6 @@ func NewKeyMap() KeyMap {
 			key.WithHelp("q", "quit"),
 		),
 	}
-}
-
-type KeyMap struct {
-	Quit key.Binding
 }
 
 func (k KeyMap) ShortHelp() []key.Binding {
