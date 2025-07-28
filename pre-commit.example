@@ -1,0 +1,16 @@
+#!/bin/sh
+
+docker pull ghcr.io/gitleaks/gitleaks:latest || exit 1
+
+# Полный путь к корню репозитория
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
+docker run --rm \
+  -v "$REPO_ROOT:/scan" \
+  ghcr.io/gitleaks/gitleaks:latest detect \
+  --source="/scan" \
+  --verbose \
+  --redact || { echo "❌ Обнаружены утечки секретов"; exit 1; }
+
+echo "✅ Gitleaks: Утечек секретов не обнаружено"
+exit 0
