@@ -11,6 +11,7 @@ deps:
 .PHONY: audit
 audit: tools
 	@export PATH="$(shell pwd)/bin:$(PATH)"; govulncheck ./...
+	@trivy fs ./
 
 .PHONY: lint
 lint:

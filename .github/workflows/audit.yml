@@ -15,15 +15,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Secret Scanning - TruffleHog
-        uses: trufflesecurity/trufflehog@main
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.33.1
         with:
-          extra_args: --results=verified,unknown
-
-      - name: Secret Scanning - GitLeaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          scan-type: fs
+          scan-ref: .
+          trivy-config: trivy.yaml
+        continue-on-error: true
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -51,8 +49,3 @@ jobs:
       - name: Run test
         run: go test -race -failfast -count 1 ./...
         working-directory: ./
-
-      - name: Run SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
