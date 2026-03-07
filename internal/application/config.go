@@ -22,12 +22,6 @@ type Filename struct {
 
 	// NginxConf содержит имя СИМВОЛИЧЕСКОЙ ССЫЛКИ на конфигурационный файл Nginx.
 	NginxConf string `env:"CAPUCHINATOR_FILENAME_NGINX_CONF" envDefault:"nginx_capuchin.conf"`
-
-	// VictoriaMetrics содержит имя файла конфига victoriametrics.
-	VictoriaMetrics string `env:"CAPUCHINATOR_FILENAME_VICTORIAMETRICS" envDefault:"victoriametrics.yaml"`
-
-	// Vector содержит имя файла конфига vector.
-	Vector string `env:"CAPUCHINATOR_FILENAME_VECTOR" envDefault:"vector.yaml"`
 }
 
 // GitHub представляет конфигурацию GitHub.

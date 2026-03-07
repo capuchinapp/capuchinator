@@ -62,11 +62,9 @@ func New(appVersion string) (*App, error) {
 
 		Theme: theme,
 
-		FilenameComposeBlue:     conf.Filename.ComposeBlue,
-		FilenameComposeGreen:    conf.Filename.ComposeGreen,
-		FilenameNginxConf:       conf.Filename.NginxConf,
-		FilenameVictoriaMetrics: conf.Filename.VictoriaMetrics,
-		FilenameVector:          conf.Filename.Vector,
+		FilenameComposeBlue:  conf.Filename.ComposeBlue,
+		FilenameComposeGreen: conf.Filename.ComposeGreen,
+		FilenameNginxConf:    conf.Filename.NginxConf,
 	})
 
 	dic := NewDIC(DICConfig{

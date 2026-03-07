@@ -4,35 +4,22 @@ services:
   capuchin_db:
     image: postgres:16.4
     container_name: capuchin_postgres
-    labels:
-      - "capuchin.app.component=postgres"
-    restart: unless-stopped
     volumes:
       - capuchin_db_data:/var/lib/postgresql/data
     networks:
       - capuchin-network
 
   capuchin_blue_api:
-    depends_on:
-      - capuchin_db
     image: ghcr.io/capuchinapp/cloud/api:${APP_VERSION}
     container_name: capuchin_blue_${APP_VERSION}_api
-    labels:
-      - "capuchin.app.component=api"
-    restart: unless-stopped
     ports:
       - "3001:3000"
     networks:
       - capuchin-network
 
   capuchin_blue_ui:
-    depends_on:
-      - capuchin_blue_api
     image: ghcr.io/capuchinapp/cloud/ui:${APP_VERSION}
     container_name: capuchin_blue_${APP_VERSION}_ui
-    labels:
-      - "capuchin.app.component=ui"
-    restart: unless-stopped
     ports:
       - "3002:80" # important for running (127.0.0.1) without nginx: +1 from the api port
     networks:

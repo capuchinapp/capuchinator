@@ -31,11 +31,9 @@ func TestLoadConfiguration(t *testing.T) {
 					return fromEnv == "true"
 				}(),
 				Filename: Filename{
-					ComposeBlue:     "compose.blue.yaml",
-					ComposeGreen:    "compose.green.yaml",
-					NginxConf:       "nginx_capuchin.conf",
-					VictoriaMetrics: "victoriametrics.yaml",
-					Vector:          "vector.yaml",
+					ComposeBlue:  "compose.blue.yaml",
+					ComposeGreen: "compose.green.yaml",
+					NginxConf:    "nginx_capuchin.conf",
 				},
 				GitHub: GitHub{
 					PersonalAccessToken: "ghp_key",
@@ -53,8 +51,6 @@ func TestLoadConfiguration(t *testing.T) {
 				t.Setenv("CAPUCHINATOR_FILENAME_COMPOSE_BLUE", "compose-blue")
 				t.Setenv("CAPUCHINATOR_FILENAME_COMPOSE_GREEN", "compose-green")
 				t.Setenv("CAPUCHINATOR_FILENAME_NGINX_CONF", "nginx-conf")
-				t.Setenv("CAPUCHINATOR_FILENAME_VICTORIAMETRICS", "victoriametrics")
-				t.Setenv("CAPUCHINATOR_FILENAME_VECTOR", "vector")
 
 				t.Setenv("CAPUCHINATOR_GITHUB_PERSONAL_ACCESS_TOKEN", "ghp_key")
 				t.Setenv("CAPUCHINATOR_GITHUB_API_VERSION", "2022-11-29")
@@ -63,11 +59,9 @@ func TestLoadConfiguration(t *testing.T) {
 			want: &Configuration{
 				DevMode: true,
 				Filename: Filename{
-					ComposeBlue:     "compose-blue",
-					ComposeGreen:    "compose-green",
-					NginxConf:       "nginx-conf",
-					VictoriaMetrics: "victoriametrics",
-					Vector:          "vector",
+					ComposeBlue:  "compose-blue",
+					ComposeGreen: "compose-green",
+					NginxConf:    "nginx-conf",
 				},
 				GitHub: GitHub{
 					PersonalAccessToken: "ghp_key",

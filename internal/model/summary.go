@@ -17,11 +17,9 @@ type SummaryConfig struct {
 
 	Theme *domain.Theme
 
-	FilenameComposeBlue     string
-	FilenameComposeGreen    string
-	FilenameNginxConf       string
-	FilenameVictoriaMetrics string
-	FilenameVector          string
+	FilenameComposeBlue  string
+	FilenameComposeGreen string
+	FilenameNginxConf    string
 }
 
 type Summary struct {
@@ -38,11 +36,9 @@ type Summary struct {
 	requirementsDockerComposeVersion string
 	requirementsNginxVersion         string
 
-	filenameComposeBlue     string
-	filenameComposeGreen    string
-	filenameNginxConf       string
-	filenameVictoriaMetrics string
-	filenameVector          string
+	filenameComposeBlue  string
+	filenameComposeGreen string
+	filenameNginxConf    string
 
 	currentDir      string
 	currentVersion  string
@@ -59,9 +55,7 @@ type Summary struct {
 	deployCheckingLogs     *bool
 	deployCheckingRequests *bool
 
-	switchingVictoriaMetrics *bool
-	switchingVector          *bool
-	switchingNginx           *bool
+	switchingNginx *bool
 
 	shutdownStopping *bool
 
@@ -91,11 +85,9 @@ func NewSummary(cfg SummaryConfig) *Summary {
 		requirementsDockerComposeVersion: "???",
 		requirementsNginxVersion:         "???",
 
-		filenameComposeBlue:     cfg.FilenameComposeBlue,
-		filenameComposeGreen:    cfg.FilenameComposeGreen,
-		filenameNginxConf:       cfg.FilenameNginxConf,
-		filenameVictoriaMetrics: cfg.FilenameVictoriaMetrics,
-		filenameVector:          cfg.FilenameVector,
+		filenameComposeBlue:  cfg.FilenameComposeBlue,
+		filenameComposeGreen: cfg.FilenameComposeGreen,
+		filenameNginxConf:    cfg.FilenameNginxConf,
 
 		currentDir:      "???",
 		currentVersion:  "???",
@@ -162,11 +154,9 @@ func (s *Summary) View() string {
 	var shutdown string
 	if s.mode == domain.ModeUpdate {
 		switchStrategy = fmt.Sprintf(
-			"%s\n%s\n%s\n%s",
+			"%s\n%s",
 			s.styles.category.Render("Switch strategy"),
-			s.styles.title.Render("Switching - VictoriaMetrics: ")+s.boolToIcon(s.switchingVictoriaMetrics),
-			s.styles.title.Render("Switching - Vector:          ")+s.boolToIcon(s.switchingVector),
-			s.styles.title.Render("Switching - Nginx:           ")+s.boolToIcon(s.switchingNginx),
+			s.styles.title.Render("Switching - Nginx: ")+s.boolToIcon(s.switchingNginx),
 		)
 
 		shutdown = fmt.Sprintf(
@@ -194,8 +184,6 @@ func (s *Summary) View() string {
 		s.styles.title.Render("compose.blue.yaml:    ")+s.styles.text.Render(s.filenameComposeBlue),
 		s.styles.title.Render("compose.green.yaml:   ")+s.styles.text.Render(s.filenameComposeGreen),
 		s.styles.title.Render("nginx.conf (symlink): ")+s.styles.text.Render(s.filenameNginxConf),
-		s.styles.title.Render("victoriametrics.yaml: ")+s.styles.text.Render(s.filenameVictoriaMetrics),
-		s.styles.title.Render("vector.yaml:          ")+s.styles.text.Render(s.filenameVector),
 
 		s.styles.category.Render("Deploy strategy"),
 		s.styles.title.Render("Version:    ")+s.styles.text.Render(s.currentVersion)+" >> "+s.styles.text.Render(s.nextVersion),
@@ -231,14 +219,6 @@ func (s *Summary) GetFilenameComposeGreen() string {
 
 func (s *Summary) GetFilenameNginxConf() string {
 	return s.filenameNginxConf
-}
-
-func (s *Summary) GetFilenameVictoriaMetrics() string {
-	return s.filenameVictoriaMetrics
-}
-
-func (s *Summary) GetFilenameVector() string {
-	return s.filenameVector
 }
 
 func (s *Summary) GetCurrentVersion() string {
@@ -325,14 +305,6 @@ func (s *Summary) UpdateDeployCheckingLogs(value bool) {
 
 func (s *Summary) UpdateDeployCheckingRequests(value bool) {
 	s.deployCheckingRequests = &value
-}
-
-func (s *Summary) UpdateSwitchingVictoriaMetrics(value bool) {
-	s.switchingVictoriaMetrics = &value
-}
-
-func (s *Summary) UpdateSwitchingVector(value bool) {
-	s.switchingVector = &value
 }
 
 func (s *Summary) UpdateSwitchingNginx(value bool) {

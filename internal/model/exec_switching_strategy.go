@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"regexp"
 	"strings"
 
 	"capuchinator/internal/domain"
@@ -24,32 +23,10 @@ func NewExecSwitchingStrategy(dic DIC) *Exec {
 		StartFunc: func() domain.ExecResult {
 			dir := summary.GetDir()
 			devMode := dic.GetDevMode()
-			nextStrategy := summary.GetNextStrategy()
-			nextVersion := summary.GetNextVersion()
 			currPortAPI, currPortUI := summary.GetCurrentPorts()
 			nextPortAPI, nextPortUI := summary.GetNextPorts()
 
-			pathVictoriaMetrics := path.Join(dir, summary.GetFilenameVictoriaMetrics())
-			pathVector := path.Join(dir, summary.GetFilenameVector())
 			pathNginx := path.Join(dir, summary.GetFilenameNginxConf())
-
-			containerVM := "capuchin_ops_victoriametrics"
-			if devMode {
-				containerVM = TestContainerName
-			}
-			resVictoriaMetrics := switchVictoriaMetrics(pathVictoriaMetrics, nextStrategy, containerVM)
-			if resVictoriaMetrics.Status == domain.ExecResultStatusError {
-				return resVictoriaMetrics
-			}
-
-			containerVector := "capuchin_ops_vector"
-			if devMode {
-				containerVector = TestContainerName
-			}
-			resVector := switchVector(pathVector, nextStrategy, nextVersion, containerVector)
-			if resVector.Status == domain.ExecResultStatusError {
-				return resVector
-			}
 
 			cmdTest := exec.Command(PathNginx, "-t")
 			cmdReload := exec.Command(PathNginx, "-s", "reload")
@@ -64,120 +41,23 @@ func NewExecSwitchingStrategy(dic DIC) *Exec {
 
 			return domain.ExecResult{
 				Status: domain.ExecResultStatusSuccess,
-				Output: fmt.Sprintf(
-					"### Switching - VictoriaMetrics:\n%s\n### Switching - Vector:\n%s\n### Switching - Nginx:\n%s",
-					resVictoriaMetrics.Output,
-					resVector.Output,
+				Output: fmt.Sprintf( //nolint:perfsprint // ignore
+					"### Switching - Nginx:\n%s",
 					resNginx.Output,
 				),
 			}
 		},
 
 		SuccessFunc: func() {
-			summary.UpdateSwitchingVictoriaMetrics(true)
-			summary.UpdateSwitchingVector(true)
 			summary.UpdateSwitchingNginx(true)
 		},
 
 		ErrorFunc: func() {
-			summary.UpdateSwitchingVictoriaMetrics(false)
-			summary.UpdateSwitchingVector(false)
 			summary.UpdateSwitchingNginx(false)
 		},
 
 		NextCmd: NewExecStoppingCurrentDeploy(dic),
 	})
-}
-
-func switchVictoriaMetrics(filePath string, nextStrategy domain.Strategy, container string) domain.ExecResult {
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return domain.ExecResult{
-			Status: domain.ExecResultStatusError,
-			Err:    fmt.Errorf("switchVictoriaMetrics: failed to read file: %v", err),
-		}
-	}
-
-	fileContent := string(content)
-
-	blueString := "- targets: ['capuchin_blue_api:8080'] # blue"
-	greenString := "- targets: ['capuchin_green_api:8080'] # green"
-
-	if nextStrategy == domain.StrategyBlue { //nolint:nestif // ignore
-		if strings.Contains(fileContent, "#"+blueString) {
-			fileContent = strings.Replace(fileContent, "#"+blueString, blueString, 1)
-		}
-
-		if !strings.Contains(fileContent, "#"+greenString) {
-			fileContent = strings.Replace(fileContent, greenString, "#"+greenString, 1)
-		}
-	} else {
-		if !strings.Contains(fileContent, "#"+blueString) {
-			fileContent = strings.Replace(fileContent, blueString, "#"+blueString, 1)
-		}
-
-		if strings.Contains(fileContent, "#"+greenString) {
-			fileContent = strings.Replace(fileContent, "#"+greenString, greenString, 1)
-		}
-	}
-
-	err = os.WriteFile(filePath, []byte(fileContent), fileMode) //#nosec G306 -- This is a false positive
-	if err != nil {
-		return domain.ExecResult{
-			Status: domain.ExecResultStatusError,
-			Err:    fmt.Errorf("switchVictoriaMetrics: failed to write file: %v", err),
-		}
-	}
-
-	output, err := exec.Command(PathDocker, "restart", container).CombinedOutput()
-	if err != nil {
-		return domain.ExecResult{
-			Status: domain.ExecResultStatusError,
-			Err:    err,
-			Output: string(output),
-		}
-	}
-
-	return domain.ExecResult{
-		Status: domain.ExecResultStatusSuccess,
-		Output: string(output),
-	}
-}
-
-func switchVector(filePath string, nextStrategy domain.Strategy, nextVersion string, container string) domain.ExecResult {
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return domain.ExecResult{
-			Status: domain.ExecResultStatusError,
-			Err:    fmt.Errorf("switchVector: failed to read file: %v", err),
-		}
-	}
-
-	substr := nextStrategy.String() + "_" + nextVersion
-	re := regexp.MustCompile(`(capuchin_)[a-z]+_v\d+\.\d+\.\d+(_[a-z]+)`)
-	fileContent := re.ReplaceAllString(string(content), "${1}"+substr+"${2}")
-
-	err = os.WriteFile(filePath, []byte(fileContent), fileMode) //#nosec G306 -- This is a false positive
-	if err != nil {
-		return domain.ExecResult{
-			Status: domain.ExecResultStatusError,
-			Err:    fmt.Errorf("switchVector: failed to write file: %v", err),
-		}
-	}
-
-	output, err := exec.Command(PathDocker, "restart", container).CombinedOutput()
-	if err != nil {
-		return domain.ExecResult{
-			Status: domain.ExecResultStatusError,
-			Err:    err,
-			Output: string(output),
-		}
-	}
-
-	return domain.ExecResult{
-		Status: domain.ExecResultStatusSuccess,
-		Output: string(output),
-	}
 }
 
 func switchNginx(

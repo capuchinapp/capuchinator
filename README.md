@@ -36,5 +36,5 @@ export DOCKER_API_VERSION="1.43"' > .envrc
 
 ```bash
 cd /opt/capuchin
-./install.sh v0.1.0
+./install.sh v0.2.0
 ```
