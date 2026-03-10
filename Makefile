@@ -25,6 +25,10 @@ test:
 run:
 	@go run -race ./main.go
 
+.PHONY: build
+build:
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags="-s -w -X 'main.appVersion=0.0.0'" -o capuchinator ./main.go
+
 .PHONY: tools
 tools: deps
 	@go install golang.org/x/vuln/cmd/govulncheck@latest

@@ -51,9 +51,8 @@ type Summary struct {
 	nextPortAPI  string
 	nextPortUI   string
 
-	deployLaunching        *bool
-	deployCheckingLogs     *bool
-	deployCheckingRequests *bool
+	deployLaunching   *bool
+	deployHealthcheck *bool
 
 	switchingNginx *bool
 
@@ -142,11 +141,10 @@ func (s *Summary) View() string {
 	var deploy string
 	if s.mode == domain.ModeInstall || s.mode == domain.ModeUpdate {
 		deploy = fmt.Sprintf(
-			"%s\n%s\n%s\n%s",
+			"%s\n%s\n%s",
 			s.styles.category.Render("Deploy ("+s.nextVersion+")"),
-			s.styles.title.Render("Launching:           ")+s.boolToIcon(s.deployLaunching),
-			s.styles.title.Render("Checking - Logs:     ")+s.boolToIcon(s.deployCheckingLogs),
-			s.styles.title.Render("Checking - Requests: ")+s.boolToIcon(s.deployCheckingRequests),
+			s.styles.title.Render("Launching:   ")+s.boolToIcon(s.deployLaunching),
+			s.styles.title.Render("Healthcheck: ")+s.boolToIcon(s.deployHealthcheck),
 		)
 	}
 
@@ -299,12 +297,8 @@ func (s *Summary) UpdateDeployLaunching(value bool) {
 	s.deployLaunching = &value
 }
 
-func (s *Summary) UpdateDeployCheckingLogs(value bool) {
-	s.deployCheckingLogs = &value
-}
-
-func (s *Summary) UpdateDeployCheckingRequests(value bool) {
-	s.deployCheckingRequests = &value
+func (s *Summary) UpdateDeployHealthcheck(value bool) {
+	s.deployHealthcheck = &value
 }
 
 func (s *Summary) UpdateSwitchingNginx(value bool) {

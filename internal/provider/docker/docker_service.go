@@ -66,6 +66,60 @@ func (d *Docker) GetCurrentDeploy() (currVersion string, currStrategy domain.Str
 	return currVersion, currStrategy, nil
 }
 
+func (d *Docker) GetNextDeployContainers(nextVersion string) ([]container.Summary, error) {
+	allContainers, err := d.cli.ContainerList(context.Background(), container.ListOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list containers: %v", err)
+	}
+
+	if d.devMode {
+		allContainers = []container.Summary{
+			{
+				Image: "ghcr.io/capuchinapp/cloud/ui:v0.8.0",
+				Names: []string{"/capuchin_blue_v0.8.0_ui"},
+			},
+			{
+				Image: "ghcr.io/capuchinapp/cloud/api:v0.8.0",
+				Names: []string{"/capuchin_blue_v0.8.0_api"},
+			},
+		}
+	}
+
+	nextDeployContainers := make([]container.Summary, 0, len(allContainers))
+	for _, ctr := range allContainers {
+		if ctr.Image == "ghcr.io/capuchinapp/cloud/ui:"+nextVersion || ctr.Image == "ghcr.io/capuchinapp/cloud/api:"+nextVersion {
+			nextDeployContainers = append(nextDeployContainers, ctr)
+		}
+	}
+
+	return nextDeployContainers, nil
+}
+
+func (d *Docker) GetState(containerID string) (domain.ContainerState, error) {
+	if d.devMode {
+		return domain.ContainerState{
+			Status: domain.ContainerStateStatusRunning,
+			Health: domain.ContainerStateHealthHealthy,
+		}, nil
+	}
+
+	inspect, err := d.cli.ContainerInspect(context.Background(), containerID)
+	if err != nil {
+		return domain.ContainerState{}, fmt.Errorf("failed to inspect container: %v", err)
+	}
+	if inspect.State == nil {
+		return domain.ContainerState{}, errors.New("container state is nil")
+	}
+	if inspect.State.Health == nil {
+		return domain.ContainerState{}, errors.New("container health is nil")
+	}
+
+	return domain.ContainerState{
+		Status: statusToDomain(inspect.State.Status),
+		Health: healthToDomain(inspect.State.Health.Status),
+	}, nil
+}
+
 func getCurrVersion(containers []container.Summary) (string, error) {
 	versions := make(map[string]struct{})
 	for _, ctr := range containers {
@@ -123,4 +177,38 @@ func getCurrStrategy(containers []container.Summary) (domain.Strategy, error) {
 	}
 
 	return currStrategy, nil
+}
+
+func statusToDomain(status string) domain.ContainerStateStatus {
+	switch status {
+	case "created":
+		return domain.ContainerStateStatusCreated
+	case "running":
+		return domain.ContainerStateStatusRunning
+	case "paused":
+		return domain.ContainerStateStatusPaused
+	case "restarting":
+		return domain.ContainerStateStatusRestarting
+	case "removing":
+		return domain.ContainerStateStatusRemoving
+	case "exited":
+		return domain.ContainerStateStatusExited
+	case "dead":
+		return domain.ContainerStateStatusDead
+	default:
+		return domain.ContainerStateStatusExited
+	}
+}
+
+func healthToDomain(status string) domain.ContainerStateHealth {
+	switch status {
+	case container.Starting:
+		return domain.ContainerStateHealthStarting
+	case container.Healthy:
+		return domain.ContainerStateHealthHealthy
+	case container.Unhealthy:
+		return domain.ContainerStateHealthUnhealthy
+	default:
+		return domain.ContainerStateHealthNoHealthcheck
+	}
 }

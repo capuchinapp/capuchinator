@@ -19,7 +19,7 @@ func NewExecLaunchingDeploy(dic DIC) *Exec {
 				PathDocker,
 				"compose",
 				"-f",
-				fmt.Sprintf("./capuchin-compose.%s.yaml", summary.GetNextStrategy()),
+				fmt.Sprintf("./compose.%s.yaml", summary.GetNextStrategy()),
 				"up",
 				"-d",
 			)
@@ -61,6 +61,6 @@ func NewExecLaunchingDeploy(dic DIC) *Exec {
 			summary.UpdateDeployLaunching(false)
 		},
 
-		NextCmd: NewExecCheckingLogs(dic),
+		NextCmd: NewExecHealthcheck(dic),
 	})
 }
