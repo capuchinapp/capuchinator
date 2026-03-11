@@ -5,13 +5,12 @@
 ## Установка
 
 ```bash
-cd /opt/capuchin
-curl -O https://raw.githubusercontent.com/capuchinapp/capuchinator/refs/heads/master/scripts/install.sh
-chmod +x install.sh
-./install.sh v0.1.0
+curl -LsSf https://raw.githubusercontent.com/capuchinapp/capuchinator/refs/heads/master/scripts/install.sh | sh
 ```
 
 ## Использование
+
+> Обратите внимание команды выполняются для каталога: `/opt/capuchin`
 
 1. Создайте символическую ссылку на файл конфига nginx
 
@@ -23,18 +22,11 @@ ln -sf /etc/nginx/sites-available/capuchin.ru /opt/capuchin/nginx_capuchin.conf
 
 ```bash
 echo 'export CAPUCHINATOR_GITHUB_PERSONAL_ACCESS_TOKEN="ghp_key"
-export DOCKER_API_VERSION="1.43"' > .envrc
+export DOCKER_API_VERSION="1.43"' > /opt/capuchin/.envrc
 ```
 
 3. Запустите приложение
 
 ```bash
-./capuchinator
-```
-
-## Обновление
-
-```bash
-cd /opt/capuchin
-./install.sh v0.2.0
+capuchinator
 ```
