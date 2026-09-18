@@ -1,5 +1,7 @@
 [![audit](https://github.com/capuchinapp/capuchinator/actions/workflows/audit.yml/badge.svg?branch=master)](https://github.com/capuchinapp/capuchinator/actions/workflows/audit.yml)
 
+# Больше не поддерживается, ему на замену пришёл универсальный инструмент https://github.com/dimns/debafr
+
 # Capuchinator
 
 ## Установка
